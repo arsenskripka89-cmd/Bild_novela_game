@@ -319,6 +319,10 @@ label.file-input input {
   pointer-events: auto;
 }
 
+.preview.hidden {
+  display: none;
+}
+
 .preview-panel {
   width: min(100%, 900px);
   max-height: 90vh;
