@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Інтерактивний редактор історій</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand">
+      <div class="logo">✦</div>
+      <div>
+        <div class="title">Bild Story Studio</div>
+        <div class="subtitle">Візуальний редактор інтерактивних історій</div>
+      </div>
+    </div>
+    <div class="actions">
+      <button id="previewBtn" class="primary">Попередній перегляд</button>
+      <button id="exportHtmlBtn">Експорт HTML</button>
+      <button id="exportJsonBtn">Експорт JSON</button>
+      <label class="file-input">Імпорт JSON<input type="file" id="importJsonInput" accept="application/json"></label>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="panel sidebar">
+      <div class="panel-header">
+        <div>
+          <h2>Сцени</h2>
+          <p class="muted">Створюйте та організовуйте сюжетні вузли</p>
+        </div>
+        <button id="addSceneBtn" class="primary">+ Додати сцену</button>
+      </div>
+      <div class="scene-list" id="sceneList"></div>
+      <div class="panel-section">
+        <h3>Змінні</h3>
+        <p class="muted">Початкові значення для умов та геймплею</p>
+        <div id="variablesList" class="variables"></div>
+        <button id="addVariableBtn" class="ghost">+ Додати змінну</button>
+      </div>
+      <div class="panel-section">
+        <h3>Швидке збереження</h3>
+        <p class="muted">Дані зберігаються у браузері автоматично. Можете також поділитися посиланням.</p>
+        <button id="shareBtn" class="ghost">Скопіювати посилання на проєкт</button>
+      </div>
+    </section>
+
+    <section class="canvas" id="canvas"></section>
+
+    <section class="panel inspector" id="inspector">
+      <div class="empty-state" id="emptyInspector">Оберіть сцену для редагування</div>
+      <div id="inspectorBody" class="hidden">
+        <div class="panel-header">
+          <div>
+            <h2>Редактор сцени</h2>
+            <p class="muted">Текст, медіа та розгалуження</p>
+          </div>
+          <button id="deleteSceneBtn" class="danger ghost">Видалити</button>
+        </div>
+        <label class="field">
+          <span>Назва сцени</span>
+          <input type="text" id="sceneTitle">
+        </label>
+        <label class="field">
+          <span>Короткий опис / текст</span>
+          <textarea id="sceneBody" rows="4"></textarea>
+        </label>
+        <div class="grid">
+          <label class="field">
+            <span>Фон (URL)</span>
+            <input type="text" id="sceneBg">
+          </label>
+          <label class="field">
+            <span>Зображення (URL)</span>
+            <input type="text" id="sceneImage">
+          </label>
+        </div>
+        <div class="grid">
+          <label class="field">
+            <span>Аудіо (URL)</span>
+            <input type="text" id="sceneAudio">
+          </label>
+          <label class="field">
+            <span>Відео (URL)</span>
+            <input type="text" id="sceneVideo">
+          </label>
+        </div>
+        <label class="field">
+          <span>Стартова сцена</span>
+          <select id="startSceneSelect"></select>
+        </label>
+        <div class="choices-header">
+          <div>
+            <h3>Вибори</h3>
+            <p class="muted">Налаштуйте переходи та умови</p>
+          </div>
+          <button id="addChoiceBtn" class="ghost">+ Додати вибір</button>
+        </div>
+        <div id="choicesList" class="choices"></div>
+      </div>
+    </section>
+  </main>
+
+  <div id="preview" class="preview hidden">
+    <div class="preview-panel">
+      <div class="preview-header">
+        <div>
+          <div class="title" id="previewTitle"></div>
+          <div class="muted" id="previewSubtitle"></div>
+        </div>
+        <button id="closePreviewBtn">Закрити</button>
+      </div>
+      <div class="preview-body">
+        <div id="previewMedia" class="media"></div>
+        <div id="previewText" class="story-text"></div>
+        <div id="previewChoices" class="preview-choices"></div>
+        <div class="muted preview-variables" id="previewVariables"></div>
+      </div>
+    </div>
+  </div>
+
+  <template id="choiceTemplate">
+    <div class="choice-card">
+      <label class="field">
+        <span>Текст кнопки</span>
+        <input type="text" class="choice-text">
+      </label>
+      <label class="field">
+        <span>Перехід до сцени</span>
+        <select class="choice-target"></select>
+      </label>
+      <label class="field">
+        <span>Умова показу (JS вираз, напр. coins &gt;= 3)</span>
+        <input type="text" class="choice-condition">
+      </label>
+      <label class="field">
+        <span>Змінити змінні (формат name=значення; через кому)</span>
+        <input type="text" class="choice-variables" placeholder="health=+5, mood='happy'">
+      </label>
+      <button class="danger ghost remove-choice">Видалити вибір</button>
+    </div>
+  </template>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>
