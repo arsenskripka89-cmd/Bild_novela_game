@@ -315,6 +315,8 @@ label.file-input input {
   backdrop-filter: blur(10px);
   display: grid;
   place-items: center;
+  z-index: 50;
+  pointer-events: auto;
 }
 
 .preview-panel {
