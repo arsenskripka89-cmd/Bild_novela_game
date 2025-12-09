@@ -32,6 +32,18 @@ const previewChoices = document.getElementById('previewChoices');
 const previewMedia = document.getElementById('previewMedia');
 const previewVariables = document.getElementById('previewVariables');
 
+const addSceneModal = document.getElementById('addSceneModal');
+const modalSceneTitle = document.getElementById('modalSceneTitle');
+const modalSceneBody = document.getElementById('modalSceneBody');
+const modalSceneBg = document.getElementById('modalSceneBg');
+const modalSceneImage = document.getElementById('modalSceneImage');
+const modalImageDrop = document.getElementById('modalImageDrop');
+const modalImagePreview = document.getElementById('modalImagePreview');
+const modalSceneError = document.getElementById('modalSceneError');
+const saveAddScene = document.getElementById('saveAddScene');
+const cancelAddScene = document.getElementById('cancelAddScene');
+const closeAddSceneModal = document.getElementById('closeAddSceneModal');
+
 const exportHtmlBtn = document.getElementById('exportHtmlBtn');
 const exportJsonBtn = document.getElementById('exportJsonBtn');
 const importJsonInput = document.getElementById('importJsonInput');
@@ -40,6 +52,7 @@ const shareBtn = document.getElementById('shareBtn');
 let state = loadState();
 let selectedSceneId = state.startSceneId || state.scenes[0]?.id;
 let dragInfo = null;
+let modalImageData = '';
 
 function generateId(prefix = 'id') {
   return `${prefix}-${Math.random().toString(16).slice(2, 8)}`;
@@ -323,14 +336,14 @@ function parseValue(input) {
   return trimmed.replace(/^['"]|['"]$/g, '');
 }
 
-function addScene() {
+function addScene({ title, body, bg, image } = {}) {
   const id = generateId('scene');
   const scene = {
     id,
-    title: 'Нова сцена',
-    body: 'Опишіть події або діалоги.',
+    title: title || 'Нова сцена',
+    body: body ?? 'Опишіть події або діалоги.',
     choices: [],
-    media: { bg: '', image: '', audio: '', video: '' },
+    media: { bg: bg || '', image: image || '', audio: '', video: '' },
     position: { x: 80 + state.scenes.length * 40, y: 80 + state.scenes.length * 20 }
   };
   state.scenes.push(scene);
@@ -381,6 +394,63 @@ function addVariable() {
   state.variables.push({ name: `var${state.variables.length + 1}`, value: 0 });
   saveState();
   renderVariables();
+}
+
+function toggleAddSceneModal(show = false) {
+  if (show) {
+    modalSceneTitle.value = '';
+    modalSceneBody.value = '';
+    modalSceneBg.value = '';
+    modalSceneImage.value = '';
+    modalImagePreview.innerHTML = '';
+    modalImagePreview.classList.add('hidden');
+    modalImageDrop.classList.remove('dragover');
+    modalSceneError.textContent = '';
+    saveAddScene.disabled = true;
+    modalImageData = '';
+    addSceneModal.classList.remove('hidden');
+    setTimeout(() => modalSceneTitle.focus(), 50);
+  } else {
+    addSceneModal.classList.add('hidden');
+  }
+}
+
+function validateModal() {
+  const title = modalSceneTitle.value.trim();
+  if (!title) {
+    modalSceneError.textContent = 'Вкажіть назву сцени';
+    saveAddScene.disabled = true;
+    return false;
+  }
+  modalSceneError.textContent = '';
+  saveAddScene.disabled = false;
+  return true;
+}
+
+function handleModalImage(file) {
+  if (!file || !file.type.startsWith('image/')) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    modalImageData = e.target.result;
+    modalImagePreview.innerHTML = '';
+    const img = document.createElement('img');
+    img.src = modalImageData;
+    img.alt = 'Попередній перегляд';
+    modalImagePreview.appendChild(img);
+    modalImagePreview.classList.remove('hidden');
+  };
+  reader.readAsDataURL(file);
+}
+
+function submitAddScene() {
+  if (!validateModal()) return;
+  addScene({
+    title: modalSceneTitle.value.trim(),
+    body: modalSceneBody.value.trim(),
+    bg: modalSceneBg.value.trim(),
+    image: modalImageData
+  });
+  toggleAddSceneModal(false);
 }
 
 function evaluateCondition(expr, vars) {
@@ -632,7 +702,7 @@ function shareProject() {
   });
 }
 
-addSceneBtn.addEventListener('click', addScene);
+addSceneBtn.addEventListener('click', () => toggleAddSceneModal(true));
 addChoiceBtn.addEventListener('click', addChoice);
 deleteSceneBtn.addEventListener('click', deleteScene);
 addVariableBtn.addEventListener('click', addVariable);
@@ -660,6 +730,30 @@ sceneAudioInput.addEventListener('input', () => updateSceneField('media', { audi
 sceneVideoInput.addEventListener('input', () => updateSceneField('media', { video: sceneVideoInput.value }));
 
 window.addEventListener('resize', () => renderCanvas());
+
+modalSceneTitle.addEventListener('input', validateModal);
+modalSceneBody.addEventListener('input', validateModal);
+modalSceneBg.addEventListener('input', validateModal);
+saveAddScene.addEventListener('click', submitAddScene);
+cancelAddScene.addEventListener('click', () => toggleAddSceneModal(false));
+closeAddSceneModal.addEventListener('click', () => toggleAddSceneModal(false));
+
+modalImageDrop.addEventListener('click', () => modalSceneImage.click());
+modalSceneImage.addEventListener('change', (e) => handleModalImage(e.target.files?.[0]));
+modalImageDrop.addEventListener('dragover', (e) => { e.preventDefault(); modalImageDrop.classList.add('dragover'); });
+modalImageDrop.addEventListener('dragleave', () => modalImageDrop.classList.remove('dragover'));
+modalImageDrop.addEventListener('drop', (e) => {
+  e.preventDefault();
+  modalImageDrop.classList.remove('dragover');
+  const file = e.dataTransfer?.files?.[0];
+  handleModalImage(file);
+});
+
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && !addSceneModal.classList.contains('hidden')) {
+    toggleAddSceneModal(false);
+  }
+});
 
 renderSceneList();
 renderVariables();

@@ -123,6 +123,49 @@
     </div>
   </div>
 
+  <div id="addSceneModal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div>
+          <div class="title">Нова сцена</div>
+          <div class="muted">Додайте основні параметри перед появою на полотні</div>
+        </div>
+        <button id="closeAddSceneModal" class="ghost">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <label class="field">
+          <span>Назва сцени *</span>
+          <input type="text" id="modalSceneTitle" placeholder="Введіть назву" required>
+          <small class="muted error" id="modalSceneError"></small>
+        </label>
+
+        <label class="field">
+          <span>Текст / опис</span>
+          <textarea id="modalSceneBody" rows="3" placeholder="Опишіть події або діалоги"></textarea>
+        </label>
+
+        <label class="field">
+          <span>Фон (URL)</span>
+          <input type="text" id="modalSceneBg" placeholder="https://...">
+        </label>
+
+        <div class="field">
+          <span>Зображення сцени (необов'язково)</span>
+          <div id="modalImageDrop" class="dropzone">Перетягніть файл або натисніть, щоб обрати</div>
+          <input type="file" id="modalSceneImage" accept="image/*" class="hidden" />
+          <small class="muted">Підтримуються .jpg, .png, .webp. Максимальний розмір залежить від браузера.</small>
+          <div id="modalImagePreview" class="media-preview hidden"></div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button id="cancelAddScene" class="ghost">Скасувати</button>
+        <button id="saveAddScene" class="primary" disabled>Зберегти</button>
+      </div>
+    </div>
+  </div>
+
   <template id="choiceTemplate">
     <div class="choice-card">
       <label class="field">
