@@ -242,6 +242,18 @@ label.file-input input {
   margin-bottom: 10px;
 }
 
+.inspector-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.inspector-actions label.file-input {
+  grid-column: span 2;
+  text-align: center;
+}
+
 .field input, .field textarea, .field select {
   width: 100%;
   padding: 10px;
