@@ -18,12 +18,6 @@
         <div class="subtitle">Візуальний редактор інтерактивних історій</div>
       </div>
     </div>
-    <div class="actions">
-      <button id="previewBtn" class="primary">Попередній перегляд</button>
-      <button id="exportHtmlBtn">Експорт HTML</button>
-      <button id="exportJsonBtn">Експорт JSON</button>
-      <label class="file-input">Імпорт JSON<input type="file" id="importJsonInput" accept="application/json"></label>
-    </div>
   </header>
 
   <main class="layout">
@@ -37,10 +31,10 @@
       </div>
       <div class="scene-list" id="sceneList"></div>
       <div class="panel-section">
-        <h3>Змінні</h3>
-        <p class="muted">Початкові значення для умов та геймплею</p>
+        <h3>Зміни</h3>
+        <p class="muted">Додавайте змінні для умовних переходів та логіки</p>
         <div id="variablesList" class="variables"></div>
-        <button id="addVariableBtn" class="ghost">+ Додати змінну</button>
+        <button id="addVariableBtn" class="ghost">+ Додати зміну</button>
       </div>
       <div class="panel-section">
         <h3>Швидке збереження</h3>
@@ -52,6 +46,12 @@
     <section class="canvas" id="canvas"></section>
 
     <section class="panel inspector" id="inspector">
+      <div class="inspector-actions">
+        <button id="previewBtn" class="primary">Попередній перегляд</button>
+        <button id="exportHtmlBtn">Експорт HTML</button>
+        <button id="exportJsonBtn">Експорт JSON</button>
+        <label class="file-input">Імпорт JSON<input type="file" id="importJsonInput" accept="application/json"></label>
+      </div>
       <div class="empty-state" id="emptyInspector">Оберіть сцену для редагування</div>
       <div id="inspectorBody" class="hidden">
         <div class="panel-header">
